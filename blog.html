@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog – WatchPaid</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f4f0;color:#1a1a1a}
+  .navbar{background:#fff;border-bottom:1px solid #e5e5e5;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100}
+  .logo{font-size:18px;font-weight:600;color:#1a1a1a;text-decoration:none}.logo span{color:#2563eb}
+  .nav-links{display:flex;gap:4px;list-style:none}
+  .nav-links a{font-size:13px;color:#555;text-decoration:none;padding:6px 14px;border-radius:6px;border:1px solid transparent;transition:all 0.15s;font-weight:500}
+  .nav-links a:hover{background:#f5f5f5;border-color:#e5e5e5;color:#111}
+  .nav-links a.active{background:#fff;border-color:#e5e5e5;color:#1e3a5f;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+  .nav-links a.featured-tab{background:#1e3a5f;color:#fff;border-color:#1e3a5f}
+  .nav-links a.featured-tab:hover{background:#162d4a;border-color:#162d4a;color:#fff}
+  .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none;-webkit-appearance:none;appearance:none}
+  .hamburger span{display:block;width:22px;height:2px;background:#1a1a1a;border-radius:2px;transition:all 0.25s}
+  .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .hamburger.open span:nth-child(2){opacity:0}
+  .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+  .mobile-menu{display:none;position:fixed;top:60px;left:0;right:0;background:#fff;border-bottom:1px solid #e5e5e5;z-index:99;padding:1rem 1.5rem;flex-direction:column;box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+  .mobile-menu a{font-size:15px;color:#333;text-decoration:none;padding:12px 0;border-bottom:1px solid #f5f5f5;display:block}
+  .mobile-menu a:last-child{border-bottom:none}
+  .mobile-menu a.active{color:#2563eb}
+  .mobile-menu a.featured-tab{color:#1e3a5f;font-weight:600}
+  .nav-btns{display:flex;gap:8px}
+  .btn-outline{border:1px solid #d1d5db;background:#fff;padding:7px 16px;border-radius:6px;font-size:13px;cursor:pointer;color:#374151}
+  .btn-blue{background:#2563eb;color:#fff;border:none;padding:7px 16px;border-radius:6px;font-size:13px;cursor:pointer}
+
+  .page-header{background:linear-gradient(135deg,#0a0f1e 0%,#1e3a5f 50%,#0d1f3c 100%);padding:50px 2rem;text-align:center;position:relative;overflow:hidden}
+  .page-header-dots{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,0.05) 1px,transparent 1px);background-size:28px 28px}
+  .page-header-content{position:relative;z-index:1}
+  .page-header h1{font-size:32px;font-weight:700;color:#fff;margin-bottom:8px}
+  .page-header p{font-size:15px;color:rgba(255,255,255,0.6)}
+
+  .main{max-width:1100px;margin:0 auto;padding:2.5rem 2rem 4rem}
+  .blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.25rem}
+  .blog-card{background:#fff;border-radius:12px;border:1px solid #e5e5e5;overflow:hidden;text-decoration:none;color:inherit;display:block}
+  .blog-card:hover{border-color:#2563eb}
+  .blog-thumb{height:160px;display:flex;align-items:center;justify-content:center;font-size:48px}
+  .blog-body{padding:1.25rem}
+  .blog-cat{font-size:11px;font-weight:600;color:#2563eb;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px}
+  .blog-title{font-size:16px;font-weight:600;color:#111;margin-bottom:8px;line-height:1.4}
+  .blog-excerpt{font-size:13px;color:#666;line-height:1.6;margin-bottom:12px}
+  .blog-meta{font-size:12px;color:#999}
+
+  .footer{background:#111;color:#aaa;padding:3rem 2rem 1.5rem}
+  .footer-inner{max-width:1100px;margin:0 auto}
+  .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2.5rem;margin-bottom:2.5rem}
+  .footer-logo{color:#2563eb;font-size:28px;font-weight:700;margin-bottom:10px}
+  .footer-desc{font-size:13px;line-height:1.7;max-width:240px;color:#aaa}
+  .footer-col h4{font-size:11px;font-weight:600;letter-spacing:1px;color:#fff;margin-bottom:12px;text-transform:uppercase}
+  .footer-col a{display:block;font-size:13px;color:#bbb;text-decoration:none;margin-bottom:7px}
+  .footer-col span{display:block;font-size:13px;color:#bbb;margin-bottom:7px}
+  .footer-bottom{border-top:1px solid #333;padding-top:1.25rem;display:flex;justify-content:space-between;font-size:12px;color:#888;flex-wrap:wrap;gap:8px}
+  .footer-bottom a{color:#888;text-decoration:none;margin-left:1rem}
+
+  @media(max-width:768px){
+    .navbar{padding:0 1rem}
+    .nav-links{display:none}
+    .hamburger{display:flex}
+    .mobile-menu.open{display:flex}
+    .navbar{padding:0 1rem}
+            .page-header{padding:35px 1rem}
+    .page-header h1{font-size:24px}
+    .main{padding:1.5rem 1rem 3rem}
+    .blog-grid{grid-template-columns:1fr}
+    .footer{padding:2rem 1rem 1rem}
+    .footer-grid{grid-template-columns:1fr;gap:1.5rem}
+    .footer-bottom{flex-direction:column;align-items:flex-start;gap:6px}
+    .footer-bottom a{margin-left:0;margin-right:1rem}
+
+  
+  a.btn-apply,a.btn-save,a.btn-blue,a.btn-outline,a.sidebar-apply-btn,a.view-profile,a.share-btn,a.cat-card,a.job-card,a.blog-card,a.cta-box a{text-decoration:none}
+</style>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💼</text></svg>">
+</head>
+<body>
+
+<nav class="navbar">
+  <a class="logo" href="movie-reviewer-job.html">Watch<span>Paid</span></a>
+  <ul class="nav-links">
+    <li><a href="movie-reviewer-job.html">Home</a></li>
+    <li><a href="blog.html" class="active">Blog</a></li>
+    <li><a href="about.html">About Us</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="movie-reviewer-job.html">Home</a>
+  <a href="blog.html" class="active">Blog</a>
+  <a href="about.html">About Us</a>
+  <a href="contact.html">Contact</a>
+</div>
+<div class="page-header">
+  <div class="page-header-dots"></div>
+  <div class="page-header-content">
+    <h1>Career Tips & Guides</h1>
+    <p>Advice to help you land and thrive in remote work</p>
+  </div>
+</div>
+
+<div class="main">
+  <div class="blog-grid">
+    <a class="blog-card" href="blog-movie-reviewer.html">
+      <div class="blog-thumb" style="background:#eff6ff">🎬</div>
+      <div class="blog-body">
+        <div class="blog-cat">Remote Work</div>
+        <div class="blog-title">How to get paid to watch movies from home in 2026</div>
+        <div class="blog-excerpt">More companies than ever are hiring remote reviewers. Here's how to find legitimate opportunities and what to expect.</div>
+        <div class="blog-meta">Jun 18, 2026 &nbsp;·&nbsp; 5 min read</div>
+      </div>
+    </a>
+    <a class="blog-card" href="blog-movie-reviewer.html">
+      <div class="blog-thumb" style="background:#f0fdf4">✍️</div>
+      <div class="blog-body">
+        <div class="blog-cat">Tips</div>
+        <div class="blog-title">Writing a review that gets you hired: what employers look for</div>
+        <div class="blog-excerpt">A strong sample review can make or break your application. We break down exactly what to include.</div>
+        <div class="blog-meta">Jun 12, 2026 &nbsp;·&nbsp; 4 min read</div>
+      </div>
+    </a>
+    <a class="blog-card" href="blog-movie-reviewer.html">
+      <div class="blog-thumb" style="background:#fff7ed">💰</div>
+      <div class="blog-body">
+        <div class="blog-cat">Earnings</div>
+        <div class="blog-title">How much can you realistically earn as a remote reviewer?</div>
+        <div class="blog-excerpt">We looked at dozens of listings to give you an honest picture of the pay range and what affects it.</div>
+        <div class="blog-meta">Jun 5, 2026 &nbsp;·&nbsp; 6 min read</div>
+      </div>
+    </a>
+    <a class="blog-card" href="blog-movie-reviewer.html">
+      <div class="blog-thumb" style="background:#fdf4ff">🏠</div>
+      <div class="blog-body">
+        <div class="blog-cat">Remote Work</div>
+        <div class="blog-title">5 tips for staying productive when working from home</div>
+        <div class="blog-excerpt">Remote work sounds easy until distractions hit. These habits will keep you focused and on track.</div>
+        <div class="blog-meta">May 28, 2026 &nbsp;·&nbsp; 4 min read</div>
+      </div>
+    </a>
+    <a class="blog-card" href="blog-movie-reviewer.html">
+      <div class="blog-thumb" style="background:#f0f9ff">📄</div>
+      <div class="blog-body">
+        <div class="blog-cat">Job Search</div>
+        <div class="blog-title">No experience? Here's how to land your first remote job</div>
+        <div class="blog-excerpt">Entry-level remote roles are out there. Here's a step-by-step approach to getting your foot in the door.</div>
+        <div class="blog-meta">May 20, 2026 &nbsp;·&nbsp; 7 min read</div>
+      </div>
+    </a>
+    <a class="blog-card" href="blog-movie-reviewer.html">
+      <div class="blog-thumb" style="background:#fff1f2">⚠️</div>
+      <div class="blog-body">
+        <div class="blog-cat">Safety</div>
+        <div class="blog-title">How to spot remote job scams before they waste your time</div>
+        <div class="blog-excerpt">Not every listing is legit. Learn the red flags that separate real opportunities from fake ones.</div>
+        <div class="blog-meta">May 14, 2026 &nbsp;·&nbsp; 5 min read</div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">Watch<span style="color:#2563eb">Paid</span></div>
+        <p class="footer-desc">Get paid to watch movies from home. WatchPaid connects film lovers with flexible remote reviewing opportunities worldwide.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigation</h4>
+        <a href="movie-reviewer-job.html">Home</a><a href="movie-reviewer-job.html">Jobs</a><a href="blog.html">Blog</a><a href="about.html">About Us</a><a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="privacy-policy.html">Privacy Policy</a><a href="terms.html">Terms of Service</a><a href="cookies.html">Cookie Policy</a><a href="disclaimer.html">Disclaimer</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="mailto:hello@watchpaid.com">hello@watchpaid.com</a>
+        <span>Remote-first, Worldwide</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy;2026 WatchPaid. All rights reserved.</span>
+      <div><a href="privacy-policy.html">Privacy Policy</a><a href="terms.html">Terms of Service</a><a href="contact.html">Contact</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobile-menu');
+if(hamburger && mobileMenu){
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+  document.addEventListener('click', (e) => {
+    if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+    }
+  });
+  // Close menu when clicking links
+  document.querySelectorAll('.mobile-menu a').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+    });
+  });
+}
+</script>
+</body>
+</html>
